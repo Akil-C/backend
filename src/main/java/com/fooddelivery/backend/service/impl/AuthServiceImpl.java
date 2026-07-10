@@ -28,10 +28,12 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
@@ -61,8 +63,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public JwtAuthenticationResponse login(LoginRequest loginRequest, String ipAddress) {
+        log.info("Login attempt for email: {} from IP: {}", loginRequest.getEmail(), ipAddress);
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new BadRequestException("Invalid email or password"));
+                .orElseThrow(() -> {
+                    log.warn("User not found for email: {}", loginRequest.getEmail());
+                    return new BadRequestException("Invalid email or password");
+                });
 
         if (!user.getIsActive()) {
             throw new BadRequestException("This account has been deactivated");
@@ -75,6 +81,7 @@ public class AuthServiceImpl implements AuthService {
                             loginRequest.getPassword()
                     )
             );
+            log.info("Authentication successful for email: {}", loginRequest.getEmail());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenProvider.generateToken(authentication);
@@ -110,6 +117,7 @@ public class AuthServiceImpl implements AuthService {
                     .build();
 
         } catch (Exception ex) {
+            log.error("Authentication failed for email: {}. Reason: {}", loginRequest.getEmail(), ex.getMessage());
             LoginHistory history = LoginHistory.builder()
                     .user(user)
                     .ipAddress(ipAddress)

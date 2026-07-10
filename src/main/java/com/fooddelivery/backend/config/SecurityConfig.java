@@ -1,6 +1,7 @@
 package com.fooddelivery.backend.config;
 
 import com.fooddelivery.backend.security.CustomUserDetailsService;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import com.fooddelivery.backend.security.jwt.JwtAuthenticationEntryPoint;
 import com.fooddelivery.backend.security.jwt.JwtAuthenticationFilter;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,8 +44,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.authenticationProvider(authenticationProvider());
+        return builder.build();
     }
 
 

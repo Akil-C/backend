@@ -1,0 +1,66 @@
+2026-07-10 17:00:38 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2026-07-10 17:00:38 [main] INFO  c.f.b.FoodDeliveryBackendApplication - Starting FoodDeliveryBackendApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 13448 (D:\Project\Antigravity\backend\target\backend-0.0.1-SNAPSHOT.jar started by akil in D:\Project\Antigravity\backend)
+2026-07-10 17:00:38 [main] INFO  c.f.b.FoodDeliveryBackendApplication - The following 1 profile is active: "dev"
+2026-07-10 17:00:40 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-10 17:00:40 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 181 ms. Found 19 JPA repository interfaces.
+2026-07-10 17:00:42 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-10 17:00:42 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-10 17:00:42 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-10 17:00:42 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.25]
+2026-07-10 17:00:42 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-07-10 17:00:42 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3356 ms
+2026-07-10 17:00:42 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-10 17:00:42 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-07-10 17:00:42 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-07-10 17:00:43 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-10 17:00:43 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-10 17:00:43 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@a63643e
+2026-07-10 17:00:43 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-10 17:00:44 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-10 17:00:45 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-10 17:00:45 [main] DEBUG org.hibernate.SQL - 
+    alter table addresses 
+       modify column street_address TEXT not null
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table categories 
+       modify column description TEXT
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table foods 
+       modify column description TEXT
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table foods 
+       modify column ingredients TEXT
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table notifications 
+       modify column message TEXT not null
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table orders 
+       modify column delivery_address TEXT not null
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table restaurants 
+       modify column address TEXT
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table restaurants 
+       modify column description TEXT
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table reviews 
+       modify column comment TEXT
+2026-07-10 17:00:46 [main] DEBUG org.hibernate.SQL - 
+    alter table settings 
+       modify column config_value TEXT not null
+2026-07-10 17:00:46 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-10 17:00:47 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-10 17:00:48 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-10 17:00:48 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-07-10 17:00:49 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-10 17:00:50 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-10 17:00:50 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-10 17:00:50 [main] INFO  c.f.b.FoodDeliveryBackendApplication - Started FoodDeliveryBackendApplication in 12.568 seconds (process running for 13.415)
+2026-07-10 17:00:50 [main] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        restaurants r1_0
+2026-07-10 17:01:19 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 17:01:19 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-10 17:01:19 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
