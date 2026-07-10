@@ -3,6 +3,7 @@ package com.fooddelivery.backend.config;
 import com.fooddelivery.backend.security.CustomUserDetailsService;
 import com.fooddelivery.backend.security.jwt.JwtAuthenticationEntryPoint;
 import com.fooddelivery.backend.security.jwt.JwtAuthenticationFilter;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +47,16 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
+
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -53,6 +64,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -68,6 +80,8 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
