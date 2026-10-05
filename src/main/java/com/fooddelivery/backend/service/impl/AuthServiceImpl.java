@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,8 +117,8 @@ public class AuthServiceImpl implements AuthService {
                     .user(userDto)
                     .build();
 
-        } catch (Exception ex) {
-            log.error("Authentication failed for email: {}. Reason: {}", loginRequest.getEmail(), ex.getMessage());
+        } catch (BadCredentialsException ex) {
+            log.error("Authentication failed for email: {}. Reason: Invalid credentials", loginRequest.getEmail());
             LoginHistory history = LoginHistory.builder()
                     .user(user)
                     .ipAddress(ipAddress)
@@ -125,6 +126,9 @@ public class AuthServiceImpl implements AuthService {
                     .build();
             loginHistoryRepository.save(history);
             throw new BadRequestException("Invalid email or password");
+        } catch (Exception ex) {
+            log.error("Unexpected error during login for email: {}", loginRequest.getEmail(), ex);
+            throw new RuntimeException("Login failed: " + ex.getMessage(), ex);
         }
     }
 

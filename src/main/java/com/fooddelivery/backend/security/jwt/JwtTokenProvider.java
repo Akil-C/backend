@@ -26,7 +26,19 @@ public class JwtTokenProvider {
     private long jwtExpirationInMs;
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(jwtSecret);
+        } catch (Exception e) {
+            keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        }
+        if (keyBytes.length < 64) {
+            try {
+                java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-512");
+                keyBytes = md.digest(keyBytes);
+            } catch (Exception ignored) {
+            }
+        }
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

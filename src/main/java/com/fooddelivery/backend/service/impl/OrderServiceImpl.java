@@ -24,6 +24,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private CartRepository cartRepository;
 
     @Autowired
@@ -114,10 +117,14 @@ public class OrderServiceImpl implements OrderService {
         PaymentMethod paymentMethod = paymentMethodRepository.findById(orderRequest.getPaymentMethodId())
                 .orElseThrow(() -> new ResourceNotFoundException("Payment method not found"));
 
+        // Fetch customer user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         // Build Order
         Order order = Order.builder()
                 .orderNumber("ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
-                .user(cart.getUser())
+                .user(user)
                 .restaurant(restaurant)
                 .subtotal(subtotal)
                 .taxAmount(taxAmount)

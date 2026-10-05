@@ -7,14 +7,14 @@ INSERT INTO roles (id, name) VALUES (2, 'ROLE_ADMIN') ON DUPLICATE KEY UPDATE na
 -- Seed Users (Password is 'password' BCrypt hashed)
 -- Admin
 INSERT INTO users (id, name, email, password, phone, is_active)
-VALUES (1, 'System Admin', 'admin@fooddelivery.com', '$2a$12$R9h/lIPzNgb.aQ1YnGPpKeWOBW7812t3pGfe33dF2Lq51u9dK72.e', '9876543210', TRUE)
+VALUES (1, 'System Admin', 'admin@fooddelivery.com', '$2a$10$KBXFiK7TKmRoauJLGapIq.VpycwMbsjB.ZAPUJOGHaRYjvGtbODB2', '9876543210', TRUE)
 ON DUPLICATE KEY UPDATE name=name;
 
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 2) ON DUPLICATE KEY UPDATE role_id=role_id;
 
 -- Customer
 INSERT INTO users (id, name, email, password, phone, is_active)
-VALUES (2, 'John Doe', 'john@gmail.com', '$2a$12$R9h/lIPzNgb.aQ1YnGPpKeWOBW7812t3pGfe33dF2Lq51u9dK72.e', '9876543211', TRUE)
+VALUES (2, 'John Doe', 'john@gmail.com', '$2a$10$KBXFiK7TKmRoauJLGapIq.VpycwMbsjB.ZAPUJOGHaRYjvGtbODB2', '9876543211', TRUE)
 ON DUPLICATE KEY UPDATE name=name;
 
 INSERT INTO user_roles (user_id, role_id) VALUES (2, 1) ON DUPLICATE KEY UPDATE role_id=role_id;
