@@ -19,8 +19,8 @@ public class FoodController {
     @Autowired
     private FoodService foodService;
 
-    // Public API endpoints
-    @GetMapping("/public/foods")
+    // Public and Admin GET endpoints
+    @GetMapping({"/public/foods", "/admin/foods"})
     public ResponseEntity<ApiResponse<Page<Food>>> getAllFoods(
             @RequestParam(value = "restaurantId", required = false) Long restaurantId,
             @RequestParam(value = "categoryId", required = false) Long categoryId,

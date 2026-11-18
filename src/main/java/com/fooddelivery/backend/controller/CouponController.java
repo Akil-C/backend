@@ -26,6 +26,12 @@ public class CouponController {
         return ResponseEntity.ok(ApiResponse.success("Active coupons retrieved", coupons));
     }
 
+    @GetMapping("/admin/coupons")
+    public ResponseEntity<ApiResponse<List<Coupon>>> getAllCoupons() {
+        List<Coupon> coupons = couponRepository.findAll();
+        return ResponseEntity.ok(ApiResponse.success("All coupons retrieved", coupons));
+    }
+
     @GetMapping("/public/coupons/validate")
     public ResponseEntity<ApiResponse<Coupon>> validateCoupon(@RequestParam("code") String code) {
         Coupon coupon = couponRepository.findByCode(code.toUpperCase())

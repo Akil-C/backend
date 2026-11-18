@@ -42,9 +42,28 @@ public class AddressServiceImpl implements AddressService {
     public Address createAddress(Long userId, Address address) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        
+
+        if (address.getLabel() == null || address.getLabel().isBlank()) {
+            address.setLabel("Home");
+        }
+        if (address.getIsDefault() == null) {
+            address.setIsDefault(false);
+        }
+        if (address.getStreetAddress() == null) {
+            address.setStreetAddress("");
+        }
+        if (address.getCity() == null) {
+            address.setCity("");
+        }
+        if (address.getState() == null) {
+            address.setState("");
+        }
+        if (address.getPostalCode() == null) {
+            address.setPostalCode("");
+        }
+
         // If this is default, turn off other defaults
-        if (address.getIsDefault()) {
+        if (Boolean.TRUE.equals(address.getIsDefault())) {
             resetDefaultAddresses(userId);
         }
 
@@ -56,17 +75,17 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address updateAddress(Long userId, Long addressId, Address addressDetails) {
         Address address = getAddressById(addressId, userId);
-        
-        if (addressDetails.getIsDefault() && !address.getIsDefault()) {
+
+        if (Boolean.TRUE.equals(addressDetails.getIsDefault()) && !Boolean.TRUE.equals(address.getIsDefault())) {
             resetDefaultAddresses(userId);
         }
 
-        address.setLabel(addressDetails.getLabel());
-        address.setStreetAddress(addressDetails.getStreetAddress());
-        address.setCity(addressDetails.getCity());
-        address.setState(addressDetails.getState());
-        address.setPostalCode(addressDetails.getPostalCode());
-        address.setIsDefault(addressDetails.getIsDefault());
+        if (addressDetails.getLabel() != null) address.setLabel(addressDetails.getLabel());
+        if (addressDetails.getStreetAddress() != null) address.setStreetAddress(addressDetails.getStreetAddress());
+        if (addressDetails.getCity() != null) address.setCity(addressDetails.getCity());
+        if (addressDetails.getState() != null) address.setState(addressDetails.getState());
+        if (addressDetails.getPostalCode() != null) address.setPostalCode(addressDetails.getPostalCode());
+        if (addressDetails.getIsDefault() != null) address.setIsDefault(addressDetails.getIsDefault());
 
         return addressRepository.save(address);
     }

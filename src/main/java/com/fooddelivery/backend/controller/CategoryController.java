@@ -17,8 +17,8 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    // Public API endpoints
-    @GetMapping("/public/categories")
+    // Public and Admin GET endpoints
+    @GetMapping({"/public/categories", "/admin/categories"})
     public ResponseEntity<ApiResponse<List<Category>>> getAllCategories() {
         List<Category> list = categoryService.getAllCategories();
         return ResponseEntity.ok(ApiResponse.success("Categories retrieved successfully", list));

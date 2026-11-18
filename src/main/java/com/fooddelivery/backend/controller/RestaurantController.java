@@ -17,8 +17,8 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
-    // Public API endpoints
-    @GetMapping("/public/restaurants")
+    // Public and Admin GET endpoints
+    @GetMapping({"/public/restaurants", "/admin/restaurants"})
     public ResponseEntity<ApiResponse<Page<Restaurant>>> getAllRestaurants(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "cuisine", required = false) String cuisine,
