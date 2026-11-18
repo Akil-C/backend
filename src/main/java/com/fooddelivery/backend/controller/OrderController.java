@@ -54,11 +54,18 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success("Order history retrieved", history));
     }
 
-    @GetMapping("/orders/{id}/invoice")
+    @GetMapping({"/orders/{id}/invoice", "/admin/orders/{id}/invoice"})
     public ResponseEntity<InputStreamResource> downloadInvoice(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long id) {
-        Order order = orderService.getOrderById(id, userPrincipal.getId());
+        Order order;
+        boolean isAdmin = userPrincipal != null && userPrincipal.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (isAdmin) {
+            order = orderService.getOrderByIdAdmin(id);
+        } else {
+            order = orderService.getOrderById(id, userPrincipal.getId());
+        }
         ByteArrayInputStream bis = pdfInvoiceService.generateInvoicePdf(order);
 
         HttpHeaders headers = new HttpHeaders();
