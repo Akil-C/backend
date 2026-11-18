@@ -64,10 +64,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public JwtAuthenticationResponse login(LoginRequest loginRequest, String ipAddress) {
-        log.info("Login attempt for email: {} from IP: {}", loginRequest.getEmail(), ipAddress);
-        User user = userRepository.findByEmail(loginRequest.getEmail())
+        String email = loginRequest.getEmail() != null ? loginRequest.getEmail().trim().toLowerCase() : "";
+        log.info("Login attempt for email: {} from IP: {}", email, ipAddress);
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.warn("User not found for email: {}", loginRequest.getEmail());
+                    log.warn("User not found for email: {}", email);
                     return new BadRequestException("Invalid email or password");
                 });
 
@@ -78,11 +79,11 @@ public class AuthServiceImpl implements AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(),
+                            email,
                             loginRequest.getPassword()
                     )
             );
-            log.info("Authentication successful for email: {}", loginRequest.getEmail());
+            log.info("Authentication successful for email: {}", email);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenProvider.generateToken(authentication);
@@ -135,16 +136,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void register(SignUpRequest signUpRequest) {
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        String email = signUpRequest.getEmail() != null ? signUpRequest.getEmail().trim().toLowerCase() : "";
+        if (userRepository.existsByEmail(email)) {
             throw new BadRequestException("Email Address already in use!");
         }
 
         // Create new user
         User user = User.builder()
-                .name(signUpRequest.getName())
-                .email(signUpRequest.getEmail())
+                .name(signUpRequest.getName() != null ? signUpRequest.getName().trim() : "")
+                .email(email)
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .phone(signUpRequest.getPhone())
+                .phone(signUpRequest.getPhone() != null ? signUpRequest.getPhone().trim() : null)
                 .isActive(true)
                 .build();
 

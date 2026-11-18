@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     @JsonIgnore
     private String password;
 
-    @Column(unique = true, length = 20)
+    @Column(length = 30)
     private String phone;
 
     @Column(name = "is_active")

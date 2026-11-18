@@ -21,6 +21,6 @@ public class SignUpRequest {
     private String password;
 
     @NotBlank(message = "Phone number is required")
-    @Size(min = 10, max = 15, message = "Phone number must be between 10 and 15 digits")
+    @Size(min = 7, max = 25, message = "Please provide a valid phone number (between 7 and 25 digits)")
     private String phone;
 }

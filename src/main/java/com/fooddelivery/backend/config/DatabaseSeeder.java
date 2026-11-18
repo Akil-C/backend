@@ -4,6 +4,7 @@ import com.fooddelivery.backend.entity.*;
 import com.fooddelivery.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,19 +34,20 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        // Ensure roles, users, and payment methods are ALWAYS seeded first
+        seedRolesAndUsers();
+
         long count = restaurantRepository.count();
         if (count >= 50) {
-            System.out.println("Database already has " + count + " restaurants. Skipping seeding.");
+            System.out.println("Database already has " + count + " restaurants. Skipping restaurant seeding.");
             return;
         }
-
-        System.out.println("Seeding database with 50 restaurants and 350+ dishes...");
-
-        // Ensure roles, users, and payment methods are seeded first
-        seedRolesAndUsers();
 
         // 1. Seed Categories (ensure 15 categories for diverse cuisines)
         Map<String, Category> categoryMap = seedCategories();
@@ -181,30 +183,48 @@ public class DatabaseSeeder implements CommandLineRunner {
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
             .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_ADMIN").build()));
 
-        // Ensure users exist
-        if (!userRepository.findByEmail("admin@fooddelivery.com").isPresent()) {
-            User admin = User.builder()
-                .name("System Admin")
-                .email("admin@fooddelivery.com")
-                .password("$2a$12$R9h/lIPzNgb.aQ1YnGPpKeWOBW7812t3pGfe33dF2Lq51u9dK72.e") // BCrypt password
-                .phone("9876543210")
-                .isActive(true)
-                .roles(new HashSet<>(Arrays.asList(adminRole)))
-                .build();
-            userRepository.save(admin);
-        }
+        // Ensure demo users exist and have fresh valid password encoding
+        String encodedPassword = passwordEncoder.encode("password");
 
-        if (!userRepository.findByEmail("john@gmail.com").isPresent()) {
-            User customer = User.builder()
-                .name("John Doe")
-                .email("john@gmail.com")
-                .password("$2a$12$R9h/lIPzNgb.aQ1YnGPpKeWOBW7812t3pGfe33dF2Lq51u9dK72.e") // BCrypt password
-                .phone("9876543211")
-                .isActive(true)
-                .roles(new HashSet<>(Arrays.asList(customerRole)))
-                .build();
-            userRepository.save(customer);
-        }
+        userRepository.findByEmail("admin@fooddelivery.com").ifPresentOrElse(
+            admin -> {
+                admin.setPassword(encodedPassword);
+                admin.setIsActive(true);
+                admin.setRoles(new HashSet<>(Arrays.asList(adminRole)));
+                userRepository.save(admin);
+            },
+            () -> {
+                User admin = User.builder()
+                    .name("System Admin")
+                    .email("admin@fooddelivery.com")
+                    .password(encodedPassword)
+                    .phone("9876543210")
+                    .isActive(true)
+                    .roles(new HashSet<>(Arrays.asList(adminRole)))
+                    .build();
+                userRepository.save(admin);
+            }
+        );
+
+        userRepository.findByEmail("john@gmail.com").ifPresentOrElse(
+            customer -> {
+                customer.setPassword(encodedPassword);
+                customer.setIsActive(true);
+                customer.setRoles(new HashSet<>(Arrays.asList(customerRole)));
+                userRepository.save(customer);
+            },
+            () -> {
+                User customer = User.builder()
+                    .name("John Doe")
+                    .email("john@gmail.com")
+                    .password(encodedPassword)
+                    .phone("9876543211")
+                    .isActive(true)
+                    .roles(new HashSet<>(Arrays.asList(customerRole)))
+                    .build();
+                userRepository.save(customer);
+            }
+        );
 
         // Ensure payment methods exist
         String[] methods = {"UPI", "CREDIT_CARD", "DEBIT_CARD", "NET_BANKING", "WALLET", "CASH_ON_DELIVERY"};
