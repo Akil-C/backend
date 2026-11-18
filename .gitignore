@@ -1,0 +1,35 @@
+# Maven build output
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Local Environment and Secrets (NEVER COMMIT)
+.env
+.env.*
+.env.local
+!.env.example
+
+# Runtime Application Logs
+logs/
+*.log
+*.log.gz
+
+# IDE and Editor Files
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache/
+bin/
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
